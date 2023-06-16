@@ -14,9 +14,16 @@ function divide(a, b) {
     return a / b;
 };
 
+// variables to store the input
+
+let value1;
+let value2;
+
 //performs whichever operation is suited    
 
-function operation(a, operator, b) {
+function operate(a, operator, b) {
+    value1 = a;
+    value2 = b;
     if (operator === '+') {
         return add(a, b);
     } else if (operator === '-') {
@@ -27,3 +34,4 @@ function operation(a, operator, b) {
         return divide(a, b);
     };
 };
+
