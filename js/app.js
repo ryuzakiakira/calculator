@@ -78,7 +78,6 @@ function inputDigit(digit) {
     } else{
         calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
     }
-    console.log(calculator);
 };
 
 function inputDecimal(dot) {
@@ -96,7 +95,6 @@ function handleOperators(nextOperator) {
     const inputValue = parseFloat(displayValue);
     if(operator && calculator.waitingForSecondOperand) {
         calculator.operator = nextOperator;
-        console.log(calculator)
         return
     }
     if(firstOperand === null && !isNaN(inputValue)) {
@@ -108,7 +106,6 @@ function handleOperators(nextOperator) {
     }
     calculator.waitingForSecondOperand = true;
     calculator.operator = nextOperator;
-    console.log(calculator);
 };
 
 function resetCalculator() {
@@ -116,5 +113,4 @@ function resetCalculator() {
     calculator.firstOperand = null;
     calculator.waitingForSecondOperand = false;
     calculator.operator = null;
-    console.log(calculator);
 }
