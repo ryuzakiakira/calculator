@@ -1,5 +1,3 @@
-// calculator functions
-
 function add(a, b) {
     return a + b;
 };
@@ -16,8 +14,6 @@ function divide(a, b) {
     return a / b;
 };
 
-//performs whichever operation is suited    
-
 function operate(a, operator, b) {
     if (operator === '+') {
         return add(a, b);
@@ -28,6 +24,7 @@ function operate(a, operator, b) {
     } else if (operator === '/') {
         return divide(a, b);
     };
+    return b;
 };
 
 const calculator = {
@@ -49,7 +46,8 @@ keys.addEventListener('click', (event) => {
     const {target} = event;
     if (!target.matches('button')) return;
     if(target.classList.contains('operator')) {
-        console.log(target.value)
+        handleOperators(target.value)
+        updateDisplay()
         return
     };
 
@@ -70,8 +68,14 @@ keys.addEventListener('click', (event) => {
 
 
 function inputDigit(digit) {
-    const {displayValue} = calculator
-    calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
+    const {displayValue, waitingForSecondOperand} = calculator
+    if(waitingForSecondOperand === true) {
+        calculator.displayValue = digit;
+        calculator.waitingForSecondOperand = false;
+    } else{
+        calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
+    }
+    console.log(calculator);
 };
 
 function inputDecimal(dot) {
@@ -79,3 +83,19 @@ function inputDecimal(dot) {
         calculator.displayValue += dot;
     };
 };
+
+function handleOperators(nextOperator) {
+    const {firstOperand, displayValue, operator} = calculator;
+    const inputValue = parseFloat(displayValue);
+    if(firstOperand === null && !isNaN(inputValue)) {
+        calculator.firstOperand = inputValue;
+    } else if(operator) {
+        const result = operate(firstOperand, operator, inputValue)
+        calculator.displayValue = String(result)
+        calculator.firstOperand = result
+    }
+    calculator.waitingForSecondOperand = true;
+    calculator.operator = nextOperator;
+    console.log(calculator);
+};
+
