@@ -30,6 +30,9 @@ main{
     border: solid 3px black;
     border-radius: 5px;
     background-color: rgba(5, 38, 39, 0.753);
+    font-size: 40px;
+    color: whitesmoke;
+    text-align: right;
 }
 
 .keys {
