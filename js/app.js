@@ -44,25 +44,28 @@ updateDisplay()
 const keys = document.querySelector('.keys');
 keys.addEventListener('click', (event) => {
     const {target} = event;
+    const {value} = target;
     if (!target.matches('button')) return;
-    if(target.classList.contains('operator')) {
-        handleOperators(target.value)
-        updateDisplay()
-        return
-    };
 
-    if(target.classList.contains('decimal')) {
-        inputDecimal(target.value);
-        updateDisplay()
-        return
-    };
-
-    if (target.classList.contains('all-clear')) {
-        console.log(target.value)
-        return
-    };
-
-    inputDigit(target.value);
+    switch (value) {
+        case '+':
+        case '-':
+        case '*':
+        case '/':
+        case '=':
+            handleOperators(value);
+            break;
+        case '.':
+            inputDecimal(value);
+            break;
+        case 'all-clear':
+            resetCalculator();
+            break;
+        default:
+            if(Number.isInteger(parseFloat(value))) {
+                inputDigit(value);
+            }
+    }
     updateDisplay();
 });
 
@@ -79,6 +82,10 @@ function inputDigit(digit) {
 };
 
 function inputDecimal(dot) {
+    if (calculator.waitingForSecondOperand === true) {
+        calculator.displayValue = '0.';
+        calculator.waitingForSecondOperand = false;
+    }
     if (!calculator.displayValue.includes(dot)) {
         calculator.displayValue += dot;
     };
@@ -87,11 +94,16 @@ function inputDecimal(dot) {
 function handleOperators(nextOperator) {
     const {firstOperand, displayValue, operator} = calculator;
     const inputValue = parseFloat(displayValue);
+    if(operator && calculator.waitingForSecondOperand) {
+        calculator.operator = nextOperator;
+        console.log(calculator)
+        return
+    }
     if(firstOperand === null && !isNaN(inputValue)) {
         calculator.firstOperand = inputValue;
     } else if(operator) {
         const result = operate(firstOperand, operator, inputValue)
-        calculator.displayValue = String(result)
+        calculator.displayValue = String(result.toFixed(2))
         calculator.firstOperand = result
     }
     calculator.waitingForSecondOperand = true;
@@ -99,3 +111,10 @@ function handleOperators(nextOperator) {
     console.log(calculator);
 };
 
+function resetCalculator() {
+    calculator.displayValue = '0';
+    calculator.firstOperand = null;
+    calculator.waitingForSecondOperand = false;
+    calculator.operator = null;
+    console.log(calculator);
+}
